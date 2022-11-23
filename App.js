@@ -6,8 +6,11 @@
  * @flow strict-local
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import type {Node} from 'react';
+
+import SplashScreen from 'react-native-splash-screen';
+
 import {
   SafeAreaView,
   ScrollView,
@@ -54,6 +57,10 @@ const Login = ({navigation, route}) => {
 };
 
 const App: () => Node = () => {
+  useEffect(() => {
+    SplashScreen.hide(); //hides the splash screen on app load.
+  }, []);
+
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
