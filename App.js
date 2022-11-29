@@ -10,6 +10,7 @@ import React, {useState, useEffect} from 'react';
 import type {Node} from 'react';
 
 import SplashScreen from 'react-native-splash-screen';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {
   SafeAreaView,
@@ -35,8 +36,39 @@ import {
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
+function MyHome() {
+  return (
+    <Tab.Navigator
+      screenOptions={({route}) => ({
+        tabBarIcon: ({focused, color, size}) => {
+          let iconName;
+
+          if (route.name === 'Home') {
+            iconName = focused ? 'home' : 'home';
+          } else if (route.name === 'Profile') {
+            iconName = focused ? 'settings' : 'settings';
+          }
+
+          // You can return any component that you like here!
+          return <Icon name={iconName} size={30} color="#900" />;
+        },
+        tabBarActiveTintColor: 'tomato',
+        tabBarInactiveTintColor: 'gray',
+      })}>
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        initialParams={{name: 'Bat'}}
+      />
+    </Tab.Navigator>
+  );
+}
 
 const HomeScreen = ({navigation}) => {
   return (
@@ -46,6 +78,9 @@ const HomeScreen = ({navigation}) => {
         onPress={() => navigation.navigate('Profile', {name: 'John'})}
       />
       <Button title="Login" onPress={() => navigation.navigate('Login')} />
+      <Text>
+        <Icon name="rocket" size={30} color="#900" />
+      </Text>
     </View>
   );
 };
@@ -70,17 +105,23 @@ const App: () => Node = () => {
   const [enabled, setEnabled] = useState(false);
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{title: 'Welcome'}}
-        />
-        <Stack.Screen name="Profile" component={ProfileScreen} />
-        <Stack.Screen name="Login" component={Login} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <>
+      <NavigationContainer>
+        <MyHome />
+      </NavigationContainer>
+
+      {/* <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Home"
+            component={MyHome}
+            options={{title: 'Welcome'}}
+          />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Login" component={Login} />
+        </Stack.Navigator>
+      </NavigationContainer> */}
+    </>
     // <View style={backgroundStyle}>
     //   <Text>Hello Android</Text>
     //   <Image
